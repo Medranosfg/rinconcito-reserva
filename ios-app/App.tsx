@@ -5,8 +5,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
 
-// URL de tu API - cambiar cuando despliegues
-const API_URL = 'https://ungravitating-caroll-chemosynthetically.ngrok-free.dev';
+// URL de tu API - Render
+const API_URL = 'https://rinconcito-reserva.onrender.com';
 const ADMIN_PASS = 'anaga2024';
 
 type Tab = 'reservar' | 'consultar' | 'admin';

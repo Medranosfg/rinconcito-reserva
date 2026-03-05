@@ -37,8 +37,11 @@ app.get('/health', (_req: Request, res: Response) => {
   res.json({ status: 'ok', message: 'Sistema de Reservas funcionando' });
 });
 
-// Rutas de reservas
+// Inicializar base de datos al cargar el módulo
+initializeDatabase();
 const db = getDatabase();
+
+// Rutas de reservas
 app.use('/api/reservas', initReservasRouter(db));
 
 // Rutas de mesas
@@ -135,12 +138,7 @@ app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
 
 async function startServer(): Promise<void> {
   try {
-    // Inicializar base de datos
-    console.log('Inicializando base de datos...');
-    initializeDatabase();
     console.log('Base de datos inicializada correctamente');
-
-    // Iniciar servidor
     app.listen(PORT, () => {
       console.log(`Servidor corriendo en puerto ${PORT}`);
       console.log(`Health check: http://localhost:${PORT}/health`);
