@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>El Rinconcito de Anaga</title>
+  <link rel="icon" href="/logo.png">
+  <style>
+    :root{--teal:#5ac8c8;--gold:#d4a855;--bg:#000;--card:rgba(28,28,30,0.85);--border:rgba(255,255,255,0.1);--text:#fff;--text2:rgba(255,255,255,0.6);--green:#34c759;--red:#ff3b30;--orange:#ff9500}
+    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+    body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+    .bg-logo{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:80%;max-width:350px;opacity:0.06;pointer-events:none}
+    .header{padding:40px 20px 15px;text-align:center}
+    .logo{width:100px;margin-bottom:6px}
+    .subtitle{color:var(--teal);font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase}
+    .main{max-width:500px;margin:0 auto;padding:0 16px 40px}
+    .tabs{display:flex;background:var(--card);backdrop-filter:blur(20px);border-radius:10px;padding:3px;margin-bottom:20px}
+    .tab{flex:1;padding:10px 8px;background:transparent;border:none;border-radius:8px;color:var(--text2);font-size:12px;font-weight:500;cursor:pointer;transition:all 0.2s}
+    .tab.active{background:rgba(255,255,255,0.12);color:var(--text)}
+    .tab .count{background:var(--orange);color:#fff;padding:1px 6px;border-radius:8px;font-size:10px;margin-left:4px}
+    .card{background:var(--card);backdrop-filter:blur(20px);border-radius:14px;padding:20px;border:1px solid var(--border);margin-bottom:12px}
+    .card h2{font-size:18px;text-align:center;margin-bottom:4px}
+    .card>p{color:var(--text2);font-size:12px;text-align:center;margin-bottom:16px}
+    .form-row{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.05);border-radius:10px;padding:14px;margin-bottom:10px}
+    .form-row label{font-size:15px}
+    .form-row input{background:transparent;border:none;color:var(--teal);font-size:16px;font-weight:500;text-align:right;width:auto;min-width:120px;outline:none}
+    .form-row input[type="number"]{width:50px;-moz-appearance:textfield}
+    .form-row input[type="number"]::-webkit-outer-spin-button,.form-row input[type="number"]::-webkit-inner-spin-button{-webkit-appearance:none}
+    .form-row input::placeholder{color:var(--text2)}
+    .phone-group{display:flex;gap:8px;align-items:center}
+    .phone-group select{background:rgba(255,255,255,0.1);border:none;color:var(--teal);font-size:14px;font-weight:500;padding:4px;border-radius:6px;outline:none;min-width:85px}
+    .phone-group select option{background:#1c1c1e;color:#fff}
+    .phone-group input{flex:1;min-width:100px}
+    .btn{width:100%;padding:14px;margin-top:12px;background:var(--teal);border:none;border-radius:12px;color:#000;font-size:16px;font-weight:600;cursor:pointer}
+    .btn:active{transform:scale(0.98);opacity:0.9}
+    .btn:disabled{opacity:0.5}
+    .msg{padding:24px 16px;border-radius:14px;margin-top:16px;text-align:center;animation:popIn 0.3s ease}
+    @keyframes popIn{from{opacity:0;transform:scale(0.95)}to{opacity:1;transform:scale(1)}}
+    .msg.ok{background:rgba(52,199,89,0.12);border:1px solid rgba(52,199,89,0.3)}
+    .msg.err{background:rgba(255,59,48,0.12);border:1px solid rgba(255,59,48,0.3)}
+    .msg.pend{background:rgba(90,200,200,0.12);border:1px solid rgba(90,200,200,0.3)}
+    .msg-icon{font-size:40px;margin-bottom:10px}
+    .msg-title{font-size:18px;font-weight:600;margin-bottom:6px}
+    .code{font-size:28px;font-weight:700;color:var(--gold);letter-spacing:3px;margin:12px 0;font-family:monospace}
+    .msg-sub{color:var(--text2);font-size:14px}
+    .msg-note{color:var(--text2);font-size:12px;margin-top:10px;opacity:0.7}
+    .status{display:inline-block;padding:5px 12px;border-radius:16px;font-size:11px;font-weight:600;text-transform:uppercase}
+    .status.pendiente{background:rgba(255,149,0,0.15);color:var(--orange)}
+    .status.confirmada{background:rgba(52,199,89,0.15);color:var(--green)}
+    .status.cancelada{background:rgba(255,59,48,0.15);color:var(--red)}
+    .details{margin-top:16px}
+    .detail{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)}
+    .detail:last-child{border:none}
+    .detail-label{color:var(--text2);font-size:14px}
+    .detail-value{font-size:14px;font-weight:500}
+    .btn-cancel{background:transparent;border:1px solid var(--red);color:var(--red)}
+    .btn-cancel:active{background:rgba(255,59,48,0.1)}
+    .admin-card{padding:14px}
+    .admin-card .card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+    .admin-card .card-code{font-size:16px;font-weight:700;color:var(--gold);letter-spacing:2px;font-family:monospace}
+    .admin-card .card-info{display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:13px;color:var(--text2)}
+    .admin-card .card-info strong{color:var(--text);font-weight:500}
+    .admin-card .card-actions{display:flex;gap:8px;margin-top:10px}
+    .admin-card .card-actions .btn{flex:1;padding:10px;font-size:14px;margin:0}
+    .btn-confirm{background:var(--green);color:#fff}
+    .btn-reject{background:var(--red);color:#fff}
+    .btn-call{background:var(--teal);color:#000;text-decoration:none;text-align:center;display:block}
+    .empty{text-align:center;padding:30px;color:var(--text2)}
+    .empty-icon{font-size:40px;margin-bottom:10px}
+    .refresh{background:transparent;border:1px solid var(--border);color:var(--text2);padding:8px 14px;border-radius:8px;font-size:12px;cursor:pointer;margin-bottom:12px;width:100%}
+    .login-form{text-align:center}
+    .login-form input{width:100%;padding:14px;border:none;border-radius:10px;background:rgba(255,255,255,0.1);color:var(--text);font-size:16px;text-align:center;margin-bottom:10px}
+    .login-form input::placeholder{color:var(--text2)}
+  </style>
+</head>
+<body>
+  <img src="/logo.png" alt="" class="bg-logo">
+  <header class="header">
+    <img src="/logo.png" alt="El Rinconcito de Anaga" class="logo">
+    <p class="subtitle">Reservas Online</p>
+  </header>
+  <main class="main" id="app"></main>
+<script>
+const PASS='anaga2024';
+let tab='reservar';
+let adminLogged=localStorage.getItem('admin')==='1';
+let reservas=[];
+let pendCount=0;
+
+function setTab(t){tab=t;render();}
+
+function render(){
+  const hoy=new Date().toISOString().split('T')[0];
+  let tabs='<div class="tabs">'+
+    '<button class="tab '+(tab==='reservar'?'active':'')+'" onclick="setTab(\'reservar\')">Reservar</button>'+
+    '<button class="tab '+(tab==='consultar'?'active':'')+'" onclick="setTab(\'consultar\')">Consultar</button>'+
+    '<button class="tab '+(tab==='admin'?'active':'')+'" onclick="setTab(\'admin\')">Admin'+(pendCount?'<span class="count">'+pendCount+'</span>':'')+'</button>'+
+    '</div>';
+  
+  let content='';
+  if(tab==='reservar'){
+    content='<div class="card"><h2>Nueva Reserva</h2><p>Completa los datos</p>'+
+    '<form onsubmit="enviar(event)">'+
+    '<div class="form-row"><label>Fecha</label><input type="date" name="fecha" min="'+hoy+'" required></div>'+
+    '<div class="form-row"><label>Hora</label><input type="time" name="hora" required></div>'+
+    '<div class="form-row"><label>Personas</label><input type="number" name="comensales" min="1" max="20" placeholder="2" required></div>'+
+    '<div class="form-row"><label>Nombre</label><input type="text" name="nombre" placeholder="Tu nombre" required></div>'+
+    '<div class="form-row"><label>Teléfono</label><div class="phone-group"><select name="prefijo">'+
+    '<option value="+34">🇪🇸 +34</option>'+
+    '<option value="+1">🇺🇸 +1</option>'+
+    '<option value="+44">🇬🇧 +44</option>'+
+    '<option value="+33">🇫🇷 +33</option>'+
+    '<option value="+49">🇩🇪 +49</option>'+
+    '<option value="+39">🇮🇹 +39</option>'+
+    '<option value="+351">🇵🇹 +351</option>'+
+    '<option value="+31">🇳🇱 +31</option>'+
+    '<option value="+32">🇧🇪 +32</option>'+
+    '<option value="+41">🇨🇭 +41</option>'+
+    '<option value="+43">🇦🇹 +43</option>'+
+    '<option value="+46">🇸🇪 +46</option>'+
+    '<option value="+47">🇳🇴 +47</option>'+
+    '<option value="+45">🇩🇰 +45</option>'+
+    '<option value="+358">🇫🇮 +358</option>'+
+    '<option value="+48">🇵🇱 +48</option>'+
+    '<option value="+420">🇨🇿 +420</option>'+
+    '<option value="+30">🇬🇷 +30</option>'+
+    '<option value="+353">🇮🇪 +353</option>'+
+    '<option value="+36">🇭🇺 +36</option>'+
+    '<option value="+40">🇷🇴 +40</option>'+
+    '<option value="+380">🇺🇦 +380</option>'+
+    '<option value="+7">🇷🇺 +7</option>'+
+    '<option value="+90">🇹🇷 +90</option>'+
+    '<option value="+52">🇲🇽 +52</option>'+
+    '<option value="+54">🇦🇷 +54</option>'+
+    '<option value="+55">🇧🇷 +55</option>'+
+    '<option value="+56">🇨🇱 +56</option>'+
+    '<option value="+57">🇨🇴 +57</option>'+
+    '<option value="+58">🇻🇪 +58</option>'+
+    '<option value="+51">🇵🇪 +51</option>'+
+    '<option value="+593">🇪🇨 +593</option>'+
+    '<option value="+591">🇧🇴 +591</option>'+
+    '<option value="+595">🇵🇾 +595</option>'+
+    '<option value="+598">🇺🇾 +598</option>'+
+    '<option value="+506">🇨🇷 +506</option>'+
+    '<option value="+507">🇵🇦 +507</option>'+
+    '<option value="+503">🇸🇻 +503</option>'+
+    '<option value="+502">🇬🇹 +502</option>'+
+    '<option value="+504">🇭🇳 +504</option>'+
+    '<option value="+505">🇳🇮 +505</option>'+
+    '<option value="+53">🇨🇺 +53</option>'+
+    '<option value="+1809">🇩🇴 +1809</option>'+
+    '<option value="+1787">🇵🇷 +1787</option>'+
+    '<option value="+86">🇨🇳 +86</option>'+
+    '<option value="+81">🇯🇵 +81</option>'+
+    '<option value="+82">🇰🇷 +82</option>'+
+    '<option value="+91">🇮🇳 +91</option>'+
+    '<option value="+971">🇦🇪 +971</option>'+
+    '<option value="+966">🇸🇦 +966</option>'+
+    '<option value="+972">🇮🇱 +972</option>'+
+    '<option value="+61">🇦🇺 +61</option>'+
+    '<option value="+64">🇳🇿 +64</option>'+
+    '<option value="+27">🇿🇦 +27</option>'+
+    '<option value="+212">🇲🇦 +212</option>'+
+    '<option value="+20">🇪🇬 +20</option>'+
+    '<option value="+234">🇳🇬 +234</option>'+
+    '</select><input type="tel" name="telefono" placeholder="600 000 000" required></div></div>'+
+    '<button type="submit" class="btn">Solicitar Reserva</button></form></div><div id="res"></div>';
+  }else if(tab==='consultar'){
+    content='<div class="card"><h2>Consultar Reserva</h2><p>Introduce tu código</p>'+
+    '<form onsubmit="buscar(event)">'+
+    '<div class="form-row"><label>Código</label><input type="text" name="codigo" maxlength="8" placeholder="XXXXXXXX" style="text-transform:uppercase" required></div>'+
+    '<button type="submit" class="btn">Buscar</button></form></div><div id="res"></div>';
+  }else if(tab==='admin'){
+    if(!adminLogged){
+      content='<div class="card"><h2>Panel Admin</h2><p>Introduce la contraseña</p>'+
+      '<form class="login-form" onsubmit="loginAdmin(event)">'+
+      '<input type="password" id="adminPass" placeholder="Contraseña" autofocus>'+
+      '<button type="submit" class="btn">Entrar</button></form></div>';
+    }else{
+      content=renderAdmin();
+    }
+  }
+  document.getElementById('app').innerHTML=tabs+content;
+}
+
+function renderAdmin(){
+  const pend=reservas.filter(r=>r.estado==='pendiente');
+  const conf=reservas.filter(r=>r.estado==='confirmada');
+  const todas=reservas;
+  
+  let html='<button class="refresh" onclick="cargarReservas()">↻ Actualizar reservas</button>';
+  
+  if(pend.length){
+    html+='<div style="margin-bottom:8px;color:var(--orange);font-size:13px;font-weight:500">📋 Pendientes ('+pend.length+')</div>';
+    html+=pend.map(renderReservaAdmin).join('');
+  }
+  if(conf.length){
+    html+='<div style="margin:16px 0 8px;color:var(--green);font-size:13px;font-weight:500">✓ Confirmadas ('+conf.length+')</div>';
+    html+=conf.map(renderReservaAdmin).join('');
+  }
+  if(!pend.length&&!conf.length){
+    html+='<div class="empty"><div class="empty-icon">📋</div>No hay reservas</div>';
+  }
+  return html;
+}
+
+function renderReservaAdmin(r){
+  const fecha=new Date(r.fecha).toLocaleDateString('es-ES',{weekday:'short',day:'numeric',month:'short'});
+  return '<div class="card admin-card">'+
+    '<div class="card-header"><span class="card-code">'+r.codigo+'</span><span class="status '+r.estado+'">'+(r.estado==='pendiente'?'Pendiente':'Confirmada')+'</span></div>'+
+    '<div class="card-info">'+
+    '<div>📅 <strong>'+fecha+'</strong></div>'+
+    '<div>🕐 <strong>'+r.hora+'</strong></div>'+
+    '<div>👥 <strong>'+r.comensales+' pers.</strong></div>'+
+    '<div>📞 <strong>'+r.cliente.telefono+'</strong></div>'+
+    '<div style="grid-column:span 2">👤 <strong>'+r.cliente.nombre+'</strong></div>'+
+    '</div>'+
+    '<div class="card-actions">'+
+    (r.estado==='pendiente'?
+      '<button class="btn btn-confirm" onclick="confirmar(\''+r.codigo+'\')">✓ Confirmar</button>'+
+      '<button class="btn btn-reject" onclick="rechazar(\''+r.codigo+'\')">✕ Rechazar</button>':
+      '<a href="tel:'+r.cliente.telefono+'" class="btn btn-call">📞 Llamar</a>')+
+    '</div></div>';
+}
+
+function loginAdmin(e){
+  e.preventDefault();
+  if(document.getElementById('adminPass').value===PASS){
+    adminLogged=true;
+    localStorage.setItem('admin','1');
+    cargarReservas();
+  }else{alert('Contraseña incorrecta');}
+}
+
+async function cargarReservas(){
+  try{
+    const res=await fetch('/api/reservas');
+    const data=await res.json();
+    reservas=data.reservas||[];
+    reservas.sort((a,b)=>new Date(a.fecha+' '+a.hora)-new Date(b.fecha+' '+b.hora));
+    pendCount=reservas.filter(r=>r.estado==='pendiente').length;
+    render();
+  }catch(e){console.error(e);}
+}
+
+async function confirmar(codigo){
+  if(!confirm('¿Confirmar reserva? Se enviará SMS al cliente.'))return;
+  try{
+    await fetch('/api/reservas/'+codigo+'/confirmar',{method:'POST'});
+    cargarReservas();
+  }catch(e){alert('Error');}
+}
+
+async function rechazar(codigo){
+  if(!confirm('¿Rechazar y cancelar esta reserva?'))return;
+  try{
+    await fetch('/api/reservas/'+codigo,{method:'DELETE'});
+    cargarReservas();
+  }catch(e){alert('Error');}
+}
+
+async function enviar(e){
+  e.preventDefault();
+  var f=e.target,b=f.querySelector('button'),r=document.getElementById('res');
+  var telefonoCompleto=f.prefijo.value+f.telefono.value.replace(/\s/g,'');
+  b.disabled=true;b.textContent='Enviando...';
+  try{
+    var res=await fetch('/api/reservas',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fecha:f.fecha.value,hora:f.hora.value,comensales:+f.comensales.value,cliente:{nombre:f.nombre.value,telefono:telefonoCompleto,email:'reserva@local'}})});
+    var d=await res.json();
+    if(res.ok){r.innerHTML='<div class="msg pend"><div class="msg-icon">⏳</div><div class="msg-title">Solicitud Recibida</div><div class="code">'+d.codigo+'</div><div class="msg-sub">Guarda este código</div><div class="msg-note">Pendiente de confirmación. Te avisaremos por SMS.</div></div>';f.reset();cargarReservas();}
+    else{r.innerHTML='<div class="msg err"><div class="msg-icon">⚠️</div><div class="msg-title">'+(d.mensaje||'Error')+'</div></div>';}
+  }catch(err){r.innerHTML='<div class="msg err"><div class="msg-icon">⚠️</div><div class="msg-title">Error de conexión</div></div>';}
+  b.disabled=false;b.textContent='Solicitar Reserva';
+}
+
+async function buscar(e){
+  e.preventDefault();
+  var f=e.target,b=f.querySelector('button'),r=document.getElementById('res'),c=f.codigo.value.toUpperCase();
+  b.disabled=true;b.textContent='Buscando...';
+  try{
+    var res=await fetch('/api/reservas/'+c);
+    var d=await res.json();
+    if(res.ok){
+      var fecha=new Date(d.fecha).toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'});
+      var est=d.estado,txt=est==='pendiente'?'Pendiente':est==='confirmada'?'Confirmada':'Cancelada',cls=est==='confirmada'?'ok':est==='pendiente'?'pend':'err';
+      r.innerHTML='<div class="msg '+cls+'"><div class="code">'+d.codigo+'</div><span class="status '+est+'">'+txt+'</span><div class="details"><div class="detail"><span class="detail-label">Fecha</span><span class="detail-value">'+fecha+'</span></div><div class="detail"><span class="detail-label">Hora</span><span class="detail-value">'+d.hora+'</span></div><div class="detail"><span class="detail-label">Personas</span><span class="detail-value">'+d.comensales+'</span></div><div class="detail"><span class="detail-label">Nombre</span><span class="detail-value">'+d.cliente.nombre+'</span></div></div>'+(est!=='cancelada'?'<button class="btn btn-cancel" onclick="cancelar(\''+d.codigo+'\')">Cancelar Reserva</button>':'')+'</div>';
+    }else{r.innerHTML='<div class="msg err"><div class="msg-icon">🔍</div><div class="msg-title">No encontrada</div></div>';}
+  }catch(err){r.innerHTML='<div class="msg err"><div class="msg-icon">⚠️</div><div class="msg-title">Error</div></div>';}
+  b.disabled=false;b.textContent='Buscar';
+}
+
+async function cancelar(c){
+  if(!confirm('¿Cancelar reserva?'))return;
+  try{await fetch('/api/reservas/'+c,{method:'DELETE'});document.getElementById('res').innerHTML='<div class="msg err"><div class="msg-icon">✓</div><div class="msg-title">Cancelada</div></div>';cargarReservas();}catch(e){alert('Error');}
+}
+
+cargarReservas();
+render();
+</script>
+</body>
+</html>

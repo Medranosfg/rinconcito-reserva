@@ -1,0 +1,32 @@
+{
+  "expo": {
+    "name": "El Rinconcito de Anaga",
+    "slug": "rinconcito-anaga",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#000000"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.rinconcitoanaga.reservas",
+      "buildNumber": "1"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#000000"
+      },
+      "package": "com.rinconcitoanaga.reservas"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+"plugins": []
+  }
+}
