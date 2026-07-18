@@ -14,5 +14,5 @@ services:
         sync: false
       - key: TWILIO_AUTH_TOKEN
         sync: false
-      - key: TWILIO_PHONE
+      - key: TWILIO_FROM
         sync: false
